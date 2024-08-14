@@ -37,11 +37,6 @@ jobs:
           POSTGRES_DB: cadastro_livros
           POSTGRES_USER: laravel
           POSTGRES_PASSWORD: laravel
-        options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
       redis:
         image: redis:latest
         ports:
@@ -88,11 +83,6 @@ jobs:
           POSTGRES_DB: cadastro_livros
           POSTGRES_USER: laravel
           POSTGRES_PASSWORD: laravel
-        options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
       redis:
         image: redis:latest
         ports:
@@ -140,11 +130,6 @@ jobs:
           POSTGRES_DB: cadastro_livros
           POSTGRES_USER: laravel
           POSTGRES_PASSWORD: laravel
-        options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
       redis:
         image: redis:latest
         ports:
@@ -192,11 +177,6 @@ jobs:
           POSTGRES_DB: cadastro_livros
           POSTGRES_USER: laravel
           POSTGRES_PASSWORD: laravel
-        options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
       redis:
         image: redis:latest
         ports:
