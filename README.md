@@ -33,10 +33,18 @@ Subir os containers a partir da pasta raiz do projeto. Para isto, rode o comando
 
 ## Criação de usuário
 
-Para acessar a aplicação 
-
 #### http://localhost
 
-É necessário registrar um novo membro clicando em "Registrar um novo membro".
+Para acessar a aplicação é necessário registrar um novo membro clicando em "Registrar um novo membro".
 Após isto, use as credenciais que foram criadas para fazer o login
+
+## Observabilidade
+
+    Pulse delivers at-a-glance insights into your application’s performance and usage. Track down bottlenecks like slow jobs and endpoints, find your most active users, and more.
+
+    From pulse.laravel.com
+
+Para acessar o pulse 
+
+#### http://localhost/pulse
 
