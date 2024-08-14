@@ -1,0 +1,208 @@
+name: Spassu
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: php:8.3-fpm-alpine3.19
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+        extensions: mbstring, intl, pgsql, redis
+        coverage: none
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Copy .env file
+      run: cp .env.example .env
+    - name: Generate Laravel key
+      run: php artisan key:generate
+    - name: Run migrations
+      run: php artisan migrate --force
+    - name: Run tests
+      run: vendor/bin/phpunit --coverage-text
+    - name: Build and run Docker containers
+      run: docker-compose up -d --build
+    - name: Verify that containers are up
+      run: docker ps -a
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: cadastro_livros
+          POSTGRES_USER: laravel
+          POSTGRES_PASSWORD: laravel
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+  deploy-dev:
+    runs-on: php:8.3-fpm-alpine3.19
+    environment: 
+      name: dev
+    needs: build
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+        extensions: mbstring, intl, pgsql, redis
+        coverage: none
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Copy .env file
+      run: cp .env.example .env
+    - name: Generate Laravel key
+      run: php artisan key:generate
+    - name: Run migrations
+      run: php artisan migrate --force
+    - name: Run tests
+      run: vendor/bin/phpunit --coverage-text
+    - name: Build and run Docker containers
+      run: docker-compose up -d --build
+    - name: Verify that containers are up
+      run: docker ps -a
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: cadastro_livros
+          POSTGRES_USER: laravel
+          POSTGRES_PASSWORD: laravel
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+    
+  deploy-hmg:
+    runs-on: php:8.3-fpm-alpine3.19
+    environment: 
+      name: hmg
+    needs: deploy-dev
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+        extensions: mbstring, intl, pgsql, redis
+        coverage: none
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Copy .env file
+      run: cp .env.example .env
+    - name: Generate Laravel key
+      run: php artisan key:generate
+    - name: Run migrations
+      run: php artisan migrate --force
+    - name: Run tests
+      run: vendor/bin/phpunit --coverage-text
+    - name: Build and run Docker containers
+      run: docker-compose up -d --build
+    - name: Verify that containers are up
+      run: docker ps -a
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: cadastro_livros
+          POSTGRES_USER: laravel
+          POSTGRES_PASSWORD: laravel
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+          
+  deploy-prd:
+    runs-on: php:8.3-fpm-alpine3.19
+    environment: 
+      name: prd
+    needs: deploy-hmg
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+        extensions: mbstring, intl, pgsql, redis
+        coverage: none
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Copy .env file
+      run: cp .env.example .env
+    - name: Generate Laravel key
+      run: php artisan key:generate
+    - name: Run migrations
+      run: php artisan migrate --force
+    - name: Run tests
+      run: vendor/bin/phpunit --coverage-text
+    - name: Build and run Docker containers
+      run: docker-compose up -d --build
+    - name: Verify that containers are up
+      run: docker ps -a
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: cadastro_livros
+          POSTGRES_USER: laravel
+          POSTGRES_PASSWORD: laravel
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
